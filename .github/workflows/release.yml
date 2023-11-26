@@ -1,0 +1,57 @@
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+name: Release Template File
+
+jobs:
+  build:
+    name: Release Template File
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Update APT
+        run: sudo apt update
+
+      - name: Install Python3
+        run: sudo apt -y install python3
+
+      - name: Build Latex file
+        run: python3 make_latex.py Y
+
+      - name: Download font
+        run: |
+          wget -q -O notosans.zip "https://noto-website-2.storage.googleapis.com/pkgs/NotoSans-hinted.zip"
+          wget -q -O notoserif.zip "https://noto-website-2.storage.googleapis.com/pkgs/NotoSerif-hinted.zip"
+          wget -q -O notoserifcjk.zip "https://noto-website-2.storage.googleapis.com/pkgs/NotoSerifCJKsc-hinted.zip"
+          wget -q -O notosanscjk.zip "https://noto-website-2.storage.googleapis.com/pkgs/NotoSansCJKsc-hinted.zip"
+          wget -q -O robotomono.zip "https://fonts.google.com/download?family=Roboto%20Mono"
+          unzip -q notosans.zip -d notosans
+          unzip -q notoserif.zip -d notoserif
+          unzip -q notosanscjk.zip -d notosanscjk
+          unzip -q notoserifcjk.zip -d notoserifcjk
+          unzip -q robotomono.zip -d robotomono
+          mkdir -p ./.fonts
+          cp -v notosans/*.ttf ./.fonts/
+          cp -v notoserif/*.ttf ./.fonts/
+          cp -v notosanscjk/*.otf ./.fonts/
+          cp -v notoserifcjk/*.otf ./.fonts/
+          cp -v robotomono/static/*.ttf ./.fonts/
+
+          rm -rf notosans{,.zip} notoserif{,.zip} notosanscjk{,.zip} notoserifcjk{,.zip} robotomono{,.zip}
+
+      - uses: xu-cheng/latex-action@v3
+        with:
+          root_file: ACM-Template.tex
+          latexmk_use_xelatex: true
+          working_directory: .
+          args: "-g -pdf -file-line-error -halt-on-error -interaction=nonstopmode"
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: ACM-Template.pdf

@@ -1,0 +1,25 @@
+{
+  "main_title": "ACM/ICPC Template",
+  "subtitle": "ZheJiang GongShang University",
+  "author": "Shiroha",
+  "padding": [
+    25,
+    25,
+    15,
+    15
+  ],
+  "direction_path": ".",
+  "decode_mode": "utf-8",
+  "logo_path": "logo.jpg",
+  "should_match": [
+    "\\d+.+"
+  ],
+  "ignore_list": [
+    "\\.git",
+    "\\.vscode",
+    "\\.github",
+    "\\.fonts"
+  ],
+  "saver_file": "ACM-Template.tex",
+  "args": "-h -fe"
+}
