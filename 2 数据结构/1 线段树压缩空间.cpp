@@ -1,5 +1,5 @@
 struct SegTree {
-    ll s[N << 1], laz[N << 1];
+    int s[N << 1], laz[N << 1];
     bool vis[N << 1];
 
     inline int static get(int l, int r) {
@@ -36,7 +36,7 @@ struct SegTree {
         }
     }
 
-    void update(int l, int r, int x, int y, ll w) {
+    void update(int l, int r, int x, int y, int w) {
         if (l == x && y == r) {
             s[get(l, r)] += w * (r - l + 1);
             laz[get(l, r)] += w;
@@ -55,7 +55,7 @@ struct SegTree {
         up(l, r);
     }
 
-    ll query(int l, int r, int x, int y) {
+    int query(int l, int r, int x, int y) {
         if (l == x && y == r) {
             return s[get(l, r)];
         }

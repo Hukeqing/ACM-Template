@@ -1,10 +1,10 @@
 /*
  * Miller-Rabin 算法判断素性
  * 调用函数 isprime 即可判断素性
- * 板子中使用了 ll * ll 的情况，如果爆 ll 请用下方注释的代码代替原来的 pow_mod 函数
+ * 板子中使用了 int * int 的情况，如果爆 int/long long 请用下方注释的代码代替原来的 pow_mod 函数
  * 函数的复杂度为 log(2)N * C，C为常数等于下面你选择的数组长度*快速幂复杂度，计算一次 1e16 约需要 1e4 的复杂度
-ll mod_mul(ll a, ll b, ll n) {
-    ll res = 0;
+int mod_mul(int a, int b, int n) {
+    int res = 0;
     while (b) {
         if(b & 1)
             res = (res + a) % n;
@@ -14,8 +14,8 @@ ll mod_mul(ll a, ll b, ll n) {
     return res;
 }
 
-ll pow_mod(ll a, ll b, ll n) {
-    ll res = 1;
+int pow_mod(int a, int b, int n) {
+    int res = 1;
     while(b) {
         if(b & 1)
             res = mod_mul(res, a, n);
@@ -25,10 +25,9 @@ ll pow_mod(ll a, ll b, ll n) {
     return res;
 }
  */
-typedef unsigned long long ll;
 
-ll pow_mod(ll a, ll b, ll r) {
-    ll ans = 1, buff = a;
+int pow_mod(int a, int b, int r) {
+    int ans = 1, buff = a;
     while (b) {
         if (b & 1)
             ans = (ans * buff) % r;
@@ -38,7 +37,7 @@ ll pow_mod(ll a, ll b, ll r) {
     return ans;
 }
 
-bool test(ll n, ll a, ll d) {
+bool test(int n, int a, int d) {
     if (n == 2)
         return true;
     if (n == a)
@@ -47,7 +46,7 @@ bool test(ll n, ll a, ll d) {
         return false;
     while (!(d & 1))
         d >>= 1;
-    ll t = pow_mod(a, d, n);
+    int t = pow_mod(a, d, n);
     while (d != n - 1 && t != n - 1 && t != 1) {
         t = t * t % n; // 下面介绍防止溢出的办法，对应数据量为10^18次方；
         d <<= 1;
@@ -55,7 +54,7 @@ bool test(ll n, ll a, ll d) {
     return t == n - 1 || (d & 1) == 1; // 要么t能变成n-1，要么一开始t就等于1
 }
 
-bool isprime(ll n) {
+bool isprime(int n) {
     // 下面三个数组根据情况选择一个使用，复杂度为后两者比较接近
     // 如果使用了最后一种素数判定方法，记得特判 46856248255981 不是素数
     int a[3] = {2, 7, 61};                  // 精度：4e10，最小伪素数：4'759'123'141
